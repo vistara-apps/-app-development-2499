@@ -16,14 +16,33 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '22'
+        node-version: '20'
         cache: 'npm'
         
+    - name: Verify Node.js and npm versions
+      run: |
+        echo "Node.js version: $(node --version)"
+        echo "npm version: $(npm --version)"
+        echo "Working directory: $(pwd)"
+        echo "Directory contents:"
+        ls -la
+        
+    - name: Clear npm cache
+      run: npm cache clean --force
+      
     - name: Install dependencies
-      run: npm run install:all
+      run: |
+        echo "Installing frontend dependencies..."
+        npm install
+        echo "Installing server dependencies..."
+        npm run server:install
+        echo "Dependencies installed successfully!"
 
     - name: Build application
-      run: npm run build
+      run: |
+        echo "Starting build process..."
+        npm run build
+        echo "Build completed successfully!"
       env:
         NODE_OPTIONS: --max-old-space-size=4096
 
